@@ -1,0 +1,64 @@
+Pitch project coursera
+COVID19 Follow up
+========================================================
+author: JAT
+date: 28 March 2021
+autosize: true
+
+
+========================================================
+**Pandemic has a disastrous victims rate**
+
+-People expose all day to critical health information  
+-Mostly non organized info (tv, internet, radio)  
+-Citizens don't know which cities are most affected  (decision travel making)
+
+========================================================
+**COVID19 TRACKER LIVE**  
+-Allows anybody via webpage to track one or several cities covid tendencie  
+-NOTE: for this version Beta is shown the 10 most deadliest US cities  
+-Can follow by date range  
+-Display death toll by the selected range  
+
+
+========================================================
+**How to follow up?**
+
+-Go to the web page  
+-Select range of time  
+-Visualize current city(s) tendency  
+-Visualize total accumulated death toll (within time range selected)  
+
+========================================================
+**Example plot visualization**
+
+```{r, echo=FALSE}
+library(shiny)
+library(dplyr)
+library(ggplot2)
+library(scales)
+
+##Preapare data
+df2 <- read.csv("us-states.txt")
+gruop1 <- df2 %>% select(state, deaths) %>%
+      group_by(state) %>%
+      summarise(mean= mean(deaths))  %>%
+      arrange(desc(mean) , .by_group = TRUE)%>%
+      slice(1:10)%>% ungroup
+x2 <- df2 %>% filter(state %in% as.character (gruop1$state)) %>% ungroup 
+x2$date <- as.Date(as.character.Date(x2$date), format = "%Y-%m-%d")
+p <- ggplot() +
+geom_point(data=x2, aes(x=date, y=deaths, colour=state)) +
+labs (title="Daily track Covid deaths, top 10 states in US, 2020-2021",
+                  y="daily deaths", x= "Months from Jan 2020 to March 2021") +
+scale_x_date(breaks =date_breaks("months"),labels = date_format("%b"))
+print(p)
+```
+  
+====================================
+**More information visit:**
+
+- Current web page : <https://sfreude.shinyapps.io/Final_project_coursera_dev_products/>
+- Github repository < >
+
+**Thank you !!**
